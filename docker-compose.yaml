@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  clickhouse:
+    container_name: 'clickhouse-server'
+    image: clickhouse/clickhouse-server:latest
+    ports:
+      - 8123:8123
+      - 9000:9000
+    environment:
+      - CLICKHOUSE_DB=default
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - ./grafana-hover-tracker-panel/schema/admin_dashboard_schema.sql:/docker-entrypoint-initdb.d/01-admin.sql
+      - ./grafana-hover-tracker-panel/schema/clickhouse_schema.sql:/docker-entrypoint-initdb.d/02-logs.sql
+      - ./log_analysis/clickhouse-users.xml:/etc/clickhouse-server/users.d/users.xml
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  log-analysis:
+    container_name: 'log-analysis-service'
+    build:
+      context: ./log_analysis
+      dockerfile: Dockerfile
+    ports:
+      - 3002:3002
+    env_file:
+      - ./log_analysis/.env.docker
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    restart: unless-stopped
+
+  admin-dashboard:
+    container_name: 'admin-dashboard'
+    build:
+      context: ./admin_dashboard
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3000
+    env_file:
+      - ./admin_dashboard/.env.docker
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    restart: unless-stopped
+
+  grafana:
+    container_name: 'grafana-hover-panel'
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000
+    environment:
+      - GF_DEFAULT_APP_MODE=development
+      - GF_PATHS_PLUGINS=/var/lib/grafana/plugins
+      - GF_LOG_LEVEL=debug
+      - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=hover-hover-panel
+      - GF_PLUGINS_ENABLE_ALPHA=true
+      - HOVER_CLICKHOUSE_URL=clickhouse:9000
+      - HOVER_CLICKHOUSE_DATABASE=default
+      - HOVER_CLICKHOUSE_USER=default
+      - HOVER_CLICKHOUSE_PASSWORD=
+    volumes:
+      - ./grafana-hover-tracker-panel/dist:/var/lib/grafana/plugins/hover-hover-panel
+      - ./grafana-hover-tracker-panel/provisioning:/etc/grafana/provisioning
+    user: "0"
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+      log-analysis:
+        condition: service_started
+    restart: unless-stopped
+
+volumes:
+  clickhouse_data:

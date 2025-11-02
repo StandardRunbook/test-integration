@@ -1,0 +1,92 @@
+[
+  {
+    "org": "demo-org",
+    "dashboardName": "hover-demo",
+    "panelTitle": "CPU Usage",
+    "metricName": "cpu_usage",
+    "service": "system-monitor",
+    "region": "us-east-1",
+    "logStreamName": "system-monitor-cpu-logs"
+  },
+  {
+    "org": "demo-org",
+    "dashboardName": "hover-demo",
+    "panelTitle": "Memory Usage",
+    "metricName": "memory_usage",
+    "service": "system-monitor",
+    "region": "us-east-1",
+    "logStreamName": "system-monitor-memory-logs"
+  },
+  {
+    "org": "acme",
+    "dashboardName": "production",
+    "panelTitle": "CPU Usage",
+    "metricName": "cpu_usage_percent",
+    "service": "api",
+    "region": "us-east-1",
+    "logStreamName": "api-us-east-1-production"
+  },
+  {
+    "org": "acme",
+    "dashboardName": "production",
+    "panelTitle": "Memory Usage",
+    "metricName": "memory_usage_bytes",
+    "service": "api",
+    "region": "us-east-1",
+    "logStreamName": "api-us-east-1-production"
+  },
+  {
+    "org": "acme",
+    "dashboardName": "production",
+    "panelTitle": "Response Time",
+    "metricName": "response_time_ms",
+    "service": "api",
+    "region": "us-east-1",
+    "logStreamName": "api-us-east-1-performance"
+  },
+  {
+    "org": "acme",
+    "dashboardName": "production",
+    "panelTitle": "Error Rate",
+    "metricName": "error_count",
+    "service": "api",
+    "region": "us-east-1",
+    "logStreamName": "api-us-east-1-errors"
+  },
+  {
+    "org": "globex",
+    "dashboardName": "staging",
+    "panelTitle": "Database Connections",
+    "metricName": "active_connections",
+    "service": "database",
+    "region": "us-east-1",
+    "logStreamName": "postgres-us-east-1-staging"
+  },
+  {
+    "org": "globex",
+    "dashboardName": "staging",
+    "panelTitle": "Cache Hit Rate",
+    "metricName": "cache_hit_ratio",
+    "service": "cache",
+    "region": "us-east-1",
+    "logStreamName": "redis-us-east-1-staging"
+  },
+  {
+    "org": "umbrella",
+    "dashboardName": "monitoring",
+    "panelTitle": "Queue Depth",
+    "metricName": "queue_depth",
+    "service": "worker",
+    "region": "eu-west-1",
+    "logStreamName": "worker-eu-west-1-jobs"
+  },
+  {
+    "org": "umbrella",
+    "dashboardName": "monitoring",
+    "panelTitle": "Network Traffic",
+    "metricName": "network_bytes",
+    "service": "web",
+    "region": "eu-west-1",
+    "logStreamName": "nginx-eu-west-1-access"
+  }
+]
